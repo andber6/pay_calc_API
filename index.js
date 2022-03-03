@@ -33,7 +33,8 @@ function calc_pay_API(
             list.add(cdata);
 
         }
-        console.log("list.lt_number(55): ",list.lt_salary(55));
+        var x = 55;
+        console.log("lønn etter 55: ",list.lt_salary(x +1));
         console.log('number of nodes: ', list.size());
         console.log('list: ', list);
 

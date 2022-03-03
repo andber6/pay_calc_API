@@ -26,10 +26,10 @@ class LinkedList {
 
     // this method returns the salary for the requested "lønnstrinn"
     lt_salary(lt) {
-        let count = 9;
+        let count = 101;
         let node = this.head;
         while (count !== lt) {
-            count++;
+            count--;
             node = node.next
         }
         return node.data;
