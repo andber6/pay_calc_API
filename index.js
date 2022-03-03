@@ -27,16 +27,13 @@ function calc_pay_API(
         // something here...
         // console.log(lt_data)
         // let new_node = new ListNode(lt_value);
-        let list = new LinkedList('hehe');
-        list.add('hoho')
+        let list = new LinkedList();
         for(i=19; i<102; i++) {
             let cdata = lt_data[i]
             list.add(cdata);
-            // console.log('cdata: ', cdata);
-            // let new_node = new ListNode(cdata);
-            // console.log('new node:', new_node);
-            // list = new LinkedList(new_node);
+
         }
+        console.log("list.lt_number(55): ",list.lt_salary(55));
         console.log('number of nodes: ', list.size());
         console.log('list: ', list);
 

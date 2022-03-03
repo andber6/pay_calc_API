@@ -24,6 +24,17 @@ class LinkedList {
         this.head = new_node;
     }
 
+    // this method returns the salary for the requested "lønnstrinn"
+    lt_salary(lt) {
+        let count = 9;
+        let node = this.head;
+        while (count !== lt) {
+            count++;
+            node = node.next
+        }
+        return node.data;
+    }
+
     // this method returns the number of nodes present in the linked list
     size() {
         let count = 0;
