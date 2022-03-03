@@ -61,6 +61,8 @@ router.post('/post_salary_data', (request, response) => {
         // call macroservice to retrieve "lonnstrinn" data
         
         // lt_data = router.get('https://api.uaa.didev.dfo.no/api/lonnstrinn')
+
+        // hardcoded until DIFI's salary API is ready
         return lt_data = {
             19: "309 800",   20: "313 300",   21: "317 300",   22:  "320 900",   23:  "324 800",   24: "328 800", 
             25: "333 000",   26: "337 300",   27: "341 300",   28:  "345 300",   29:  "349 100",   30: "353 100",
