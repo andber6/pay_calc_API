@@ -17,11 +17,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 function get_correct_lt_based_on_additional_pay(amount, list, lt) {
-    // console.log('true of false: ', amount >= parseInt(list.lt_salary(lt+1)))
     lt_new = lt
-
-    // if not the last salary step then continue
-    if(!(list.lt_salary(lt+1) === list.getFirst().data)){
+    x = list.getFirst().data.replace(/\s/g, ``)
+    
+    // if not the last two salary steps then continue
+    if(!(amount >= parseInt(x))) {
         if (amount >= parseInt(list.lt_salary(lt+1))){
             // next_lt = lt +1
             lt_salary_converted = list.lt_salary(lt).replace(/\s/g, ``)
@@ -31,8 +31,6 @@ function get_correct_lt_based_on_additional_pay(amount, list, lt) {
             additional_pay < 0 ? additional_pay_res = additional_pay * (-1) : additional_pay_res = additional_pay
 
             lt_next_salary_converted = list.lt_salary(lt+1).replace(/\s/g, ``)
-
-            console.log('****parseInt(lt_next_salary_converted): ', parseInt(lt_next_salary_converted))
 
             if (additional_pay + parseInt(lt_salary_converted) > parseInt(lt_next_salary_converted)) {
                 lt_new = lt +1
@@ -46,18 +44,25 @@ function get_correct_lt_based_on_additional_pay(amount, list, lt) {
             return lt_new;
         }
     } else {
-        // next salary step is the last
-        lt_salary_converted = list.lt_salary(lt).replace(/\s/g, ``)
-        additional_pay = amount - parseInt(lt_salary_converted)
-        additional_pay < 0 ? additional_pay_res = additional_pay * (-1) : additional_pay_res = additional_pay
+        // salary step is already the last one
+        console.log('do we even get here...?', lt)
+        if(list.lt_salary(lt) === list.getFirst().data) {
 
-        // this is the last salary step
+            lt_salary_converted = list.lt_salary(lt).replace(/\s/g, ``)
+
+            additional_pay = amount - parseInt(lt_salary_converted)
+            additional_pay < 0 ? additional_pay_res = additional_pay * (-1) : additional_pay_res = additional_pay
+
+            return lt_new;
+        }
+        // salary step is the second last one
+
+        // lt_next_salary_converted is the last salary step
         lt_next_salary_converted = list.lt_salary(lt+1).replace(/\s/g, ``)
 
-        if (additional_pay + parseInt(lt_salary_converted) > parseInt(lt_next_salary_converted)) {
-            lt_new = lt +1
-            return lt_new
-        }
+        additional_pay = amount - parseInt(lt_next_salary_converted)
+        additional_pay < 0 ? additional_pay_res = additional_pay * (-1) : additional_pay_res = additional_pay
+
         return lt_new;
     }
         
