@@ -62,7 +62,7 @@ router.post('/post_salary_data', (request, response) => {
     var krTillegg = request.body.krTillegg_value;
     var arslonn = request.body.arslonn_value;
     var endringsBelop = request.body.endringsBelop_value;
-    var changedFieldName = request.body.changedFieldName;
+    var changedFieldName = request.body.changedFieldName_value;
     let list = new LinkedList();
     // hardcoded until DIFI's salary API is ready
     const lt_data = {
@@ -88,17 +88,12 @@ router.post('/post_salary_data', (request, response) => {
     }
     var secret = "very_secret"
     response.setHeader("secret", secret)
-    // calc_pay(stKode, lt, krTillegg, arslonn, endringsBelop, changedFieldName, lt_data)
-    const call = new Promise((resolve, reject) => 
-        // call macroservice to retrieve "lonnstrinn" data
-        
-        // lt_data = router.get('https://api.uaa.didev.dfo.no/api/lonnstrinn')
-    resolve( //() => {
-        
-        // if(calc_additional_pay(lt, krTillegg))  {
-
-        //}}
     
+    const call = new Promise((resolve, reject) => 
+
+    resolve(
+        // call macroservice to retrieve "lonnstrinn" data
+        // lt_data = router.get('https://api.uaa.didev.dfo.no/api/lonnstrinn')
     )
     )
 
@@ -112,8 +107,6 @@ router.post('/post_salary_data', (request, response) => {
         get_correct_lt_based_on_additional_pay(arslonn_plus_krTillegg, list, lt),
         console.log('lt_new etter func: ', lt_new),
         
-        // function to be used later ... ?
-        // calc_pay(stKode, lt, krTillegg, arslonn, endringsBelop, changedFieldName, lt_data, list)
     )
     responseData = {
         'stKode_value': stKode,
