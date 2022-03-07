@@ -30,7 +30,7 @@ class LinkedList {
         let node = this.head;
         while (count !== lt) {
             count--;
-            node = node.next
+            node.next ? node = node.next : this.getLast()
         }
         return node.data;
     }
