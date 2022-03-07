@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
 let lt_new;
+let additional_pay_res;
  
 //support parsing of application/x-www-form-urlencoded post data
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -20,10 +21,9 @@ function get_correct_lt_based_on_additional_pay(amount, list, lt) {
         // next_lt = lt +1
         lt_salary_converted = list.lt_salary(lt+1).replace(/\s/g, ``)
 
+        // Calculate additional pay and storing the absolute value of it as a global variable to be used in the response
         additional_pay = amount - parseInt(lt_salary_converted)
-
-        // lt_salary_converted = list.lt_salary(next_lt).replace(/\s/g, ``)
-        // console.log('lt_salary_converted: ', parseInt(lt_salary_converted))
+        additional_pay < 0 ? additional_pay_res = additional_pay * (-1) : additional_pay_res = additional_pay
 
         lt_next_salary_converted = list.lt_salary(lt+1).replace(/\s/g, ``)
 
@@ -52,25 +52,7 @@ function calc_pay(
     lt_data,
     list
     ) {
-        // console.log(lt_data)
-        // let new_node = new ListNode(lt_value);
-        // let list = new LinkedList();
-        // for(i=19; i<102; i++) {
-        //     let cdata = lt_data[i]
-        //     list.add(cdata);
 
-        // }
-        // var lt_test = 55;
-        // console.log("lønn etter 55: ",list.lt_salary(lt_test +1));
-        // console.log('number of nodes: ', list.size());
-        // console.log('list: ', list);
-        // arslonn_value = list.lt_salary(lt_value)
-        
-        // current_lt_amount = lt_data[lt_value];
-        // next_lt_amount = lt_data.indexOf(lt_value) +1;
-        // console.log('next_lt_amount: ', next_lt_amount);
-        // console.log('current_lt_amount: ', current_lt_amount);
-        // parseInt(current_lt_amount) + krTilleg_value >= next_lt_amount
 }
 
 router.post('/post_salary_data', (request, response) => {
@@ -125,19 +107,23 @@ router.post('/post_salary_data', (request, response) => {
         trimmed_arslonn = arslonn.replace(/\s/g, ``),
         console.log('Årslønn + kronetillegg: ', parseInt(trimmed_arslonn) + parseInt(krTillegg)),
         arslonn_plus_krTillegg = parseInt(trimmed_arslonn) + parseInt(krTillegg),
-        // () => {
-        //     if (arslonn_plus_krTillegg > list.lt_salary(lt+1)){
-        //         additional_pay = arslonn_plus_krTillegg - parseInt(list.lt_salary(lt +1))
-        //     }
-        // },
+
         console.log('lt før func: ', lt),
         get_correct_lt_based_on_additional_pay(arslonn_plus_krTillegg, list, lt),
         console.log('lt_new etter func: ', lt_new),
-        // call function for calculating salary data
-        calc_pay(stKode, lt, krTillegg, arslonn, endringsBelop, changedFieldName, lt_data, list)
+        
+        // function to be used later ... ?
+        // calc_pay(stKode, lt, krTillegg, arslonn, endringsBelop, changedFieldName, lt_data, list)
     )
-    response.send('lønnen for lønnstrinn ' + lt + ' = ' + arslonn);
-
+    responseData = {
+        'stKode_value': stKode,
+        'lt': lt_new,
+        'krTillegg_value': additional_pay_res,
+        'arslonn_value': arslonn_plus_krTillegg,
+        'endringsBelop_value': endringsBelop,
+        'changedFieldName_value': changedFieldName
+    }
+    response.send(responseData);
 })
 
 router.get('/', (request, response) => {
