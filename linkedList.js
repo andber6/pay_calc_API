@@ -26,13 +26,18 @@ class LinkedList {
 
     // this method returns the salary for the requested "lønnstrinn"
     lt_salary(lt) {
-        let count = 101;
-        let node = this.head;
-        while (count !== lt) {
-            count--;
-            node.next ? node = node.next : this.getLast()
+        if(lt<=101 && lt>= 19){
+            let count = 101;
+            let node = this.head;
+            while (count !== lt) {
+                count--;
+                node.next ? node = node.next : this.getLast()
         }
         return node.data;
+        } else {
+            // salary step is outside range
+            return null;
+        }
     }
 
     // this method returns the number of nodes present in the linked list

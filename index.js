@@ -20,61 +20,53 @@ app.use(bodyParser.json());
 function get_correct_lt_based_on_additional_pay(amount, list, lt) {
     lt_new = lt
     x = list.getFirst().data.replace(/\s/g, ``)
-    console.log('*do we even get here...?', lt)
-    if(lt<= 101 && lt >= 19) {
-        salary_outside_range = false;
-        // if not the last two salary steps then continue
-        if(!(amount >= parseInt(x))) {
-            if (amount >= parseInt(list.lt_salary(lt+1))){
-                // next_lt = lt +1
-                lt_salary_converted = list.lt_salary(lt).replace(/\s/g, ``)
 
-                // Calculate additional pay and store the absolute value of it as a global variable to be used in the response
-                additional_pay = amount - parseInt(lt_salary_converted)
-                additional_pay < 0 ? additional_pay_res = additional_pay * (-1) : additional_pay_res = additional_pay
+    salary_outside_range = false;
+    // if not the last two salary steps then continue
+    if(!(amount >= parseInt(x))) {
+        if (amount >= parseInt(list.lt_salary(lt+1))){
+            // next_lt = lt +1
+            lt_salary_converted = list.lt_salary(lt).replace(/\s/g, ``)
 
-                lt_next_salary_converted = list.lt_salary(lt+1).replace(/\s/g, ``)
+            // Calculate additional pay and store the absolute value of it as a global variable to be used in the response
+            additional_pay = amount - parseInt(lt_salary_converted)
+            additional_pay < 0 ? additional_pay_res = additional_pay * (-1) : additional_pay_res = additional_pay
 
-                if (additional_pay + parseInt(lt_salary_converted) > parseInt(lt_next_salary_converted)) {
-                    lt_new = lt +1
-                    get_correct_lt_based_on_additional_pay(amount, list, lt_new)
-                } else {
-                    console.log('lt her: ', lt)
-                    return lt_new;
-                }
+            lt_next_salary_converted = list.lt_salary(lt+1).replace(/\s/g, ``)
+
+            if (additional_pay + parseInt(lt_salary_converted) > parseInt(lt_next_salary_converted)) {
+                lt_new = lt +1
+                get_correct_lt_based_on_additional_pay(amount, list, lt_new)
             } else {
-                console.log('lt her: ', lt)
+                
                 return lt_new;
             }
         } else {
-            // salary step is already the last one
-            if(list.lt_salary(lt) === list.getFirst().data) {
+            
+            return lt_new;
+        }
+    } else {
+        // salary step is already the last one
+        if(list.lt_salary(lt) === list.getFirst().data) {
 
-                lt_salary_converted = list.lt_salary(lt).replace(/\s/g, ``)
+            lt_salary_converted = list.lt_salary(lt).replace(/\s/g, ``)
 
-                additional_pay = amount - parseInt(lt_salary_converted)
-                additional_pay < 0 ? additional_pay_res = additional_pay * (-1) : additional_pay_res = additional_pay
-
-                return lt_new;
-            }
-            // salary step is the second last one
-
-            // lt_next_salary_converted is the last salary step
-            lt_next_salary_converted = list.lt_salary(lt+1).replace(/\s/g, ``)
-
-            additional_pay = amount - parseInt(lt_next_salary_converted)
+            additional_pay = amount - parseInt(lt_salary_converted)
             additional_pay < 0 ? additional_pay_res = additional_pay * (-1) : additional_pay_res = additional_pay
 
             return lt_new;
         }
-    } else {
-        // Salary step is not between 19 and 101
-        console.log('do we even get here...?', lt)
-        salary_outside_range = true;
-        return salary_outside_range;
+        // salary step is the second last one
+
+        // lt_next_salary_converted is the last salary step
+        lt_next_salary_converted = list.lt_salary(lt+1).replace(/\s/g, ``)
+
+        additional_pay = amount - parseInt(lt_next_salary_converted)
+        additional_pay < 0 ? additional_pay_res = additional_pay * (-1) : additional_pay_res = additional_pay
+
+        return lt_new;
     }
-    
-        
+     
 }
 
 function formatSalaryData(totalSalary) {
@@ -148,7 +140,7 @@ function formatSalaryData(totalSalary) {
 }
 
 router.post('/post_salary_data', (request, response) => {
-
+    
     var stKode = request.body.stKode_value;
     var lt = request.body.lt_value;
     var krTillegg = request.body.krTillegg_value;
@@ -165,6 +157,17 @@ router.post('/post_salary_data', (request, response) => {
     var secret = "very_secret"
     response.setHeader("secret", secret)
 
+    function callbackFunction() {
+        arslonn = list.lt_salary(lt)
+        trimmed_arslonn = arslonn.replace(/\s/g, ``)
+        console.log('Årslønn + kronetillegg: ', parseInt(trimmed_arslonn) + parseInt(krTillegg))
+        arslonn_plus_krTillegg = parseInt(trimmed_arslonn) + parseInt(krTillegg)
+
+        console.log('lt før func: ', lt)
+        get_correct_lt_based_on_additional_pay(arslonn_plus_krTillegg, list, lt)
+        console.log('lt_new etter func: ', lt_new)
+    }
+
     const call = new Promise((resolve, reject) => 
 
     resolve(
@@ -172,16 +175,11 @@ router.post('/post_salary_data', (request, response) => {
         // lt_data = router.get('https://api.uaa.didev.dfo.no/api/lonnstrinn')
     )
     )
-
+    
     call.then(
-        arslonn = list.lt_salary(lt),
-        trimmed_arslonn = arslonn.replace(/\s/g, ``),
-        console.log('Årslønn + kronetillegg: ', parseInt(trimmed_arslonn) + parseInt(krTillegg)),
-        arslonn_plus_krTillegg = parseInt(trimmed_arslonn) + parseInt(krTillegg),
-
-        console.log('lt før func: ', lt),
-        get_correct_lt_based_on_additional_pay(arslonn_plus_krTillegg, list, lt),
-        console.log('lt_new etter func: ', lt_new),
+        // if salary step is outside range then set salary_outside_range to true
+        list.lt_salary(lt) === null ? salary_outside_range = true : 
+        callbackFunction()
         
     )
     
