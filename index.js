@@ -47,13 +47,17 @@ function get_correct_lt_based_on_additional_pay(amount, list, lt) {
         }
     } else {
         // salary step is already the last one
+        
+        lt_salary_converted = list.lt_salary(lt).replace(/\s/g, ``)
+    
         if(list.lt_salary(lt) === list.getFirst().data) {
 
-            lt_salary_converted = list.lt_salary(lt).replace(/\s/g, ``)
+            
 
             additional_pay = amount - parseInt(lt_salary_converted)
             additional_pay < 0 ? additional_pay_res = additional_pay * (-1) : additional_pay_res = additional_pay
 
+            
             return lt_new;
         }
         // salary step is the second last one
@@ -63,7 +67,10 @@ function get_correct_lt_based_on_additional_pay(amount, list, lt) {
 
         additional_pay = amount - parseInt(lt_next_salary_converted)
         additional_pay < 0 ? additional_pay_res = additional_pay * (-1) : additional_pay_res = additional_pay
-
+        if (additional_pay + parseInt(lt_salary_converted) > parseInt(lt_next_salary_converted)) {
+            lt_new = lt +1
+            get_correct_lt_based_on_additional_pay(amount, list, lt_new)
+        }
         return lt_new;
     }
      
