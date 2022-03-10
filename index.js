@@ -25,7 +25,7 @@ function get_correct_lt_based_on_additional_pay(amount, list, lt) {
     salary_outside_range = false;
     // if not the last two salary steps then continue
     if(!(amount >= parseInt(x))) {
-        
+
         if (amount >= parseInt(lt_salary_converted)){
             // next_lt = lt +1
             lt_salary_converted = list.lt_salary(lt).replace(/\s/g, ``)
@@ -196,7 +196,7 @@ router.post('/post_salary_data', (request, response) => {
     salary_outside_range ? 'Lønnstrinn må være mellom 19 og 101' :
     {
         'stKode_value': stKode,
-        'lt': formatSalaryData(lt_new),
+        'lt_value': formatSalaryData(lt_new),
         'krTillegg_value': formatSalaryData(additional_pay_res),
         'arslonn_value': formatSalaryData(arslonn_plus_krTillegg),
         'endringsBelop_value': endringsBelop,
