@@ -20,11 +20,13 @@ app.use(bodyParser.json());
 function get_correct_lt_based_on_additional_pay(amount, list, lt) {
     lt_new = lt
     x = list.getFirst().data.replace(/\s/g, ``)
+    lt_salary_converted = list.lt_salary(lt).replace(/\s/g, ``)
 
     salary_outside_range = false;
     // if not the last two salary steps then continue
     if(!(amount >= parseInt(x))) {
-        if (amount >= parseInt(list.lt_salary(lt+1))){
+        
+        if (amount >= parseInt(lt_salary_converted)){
             // next_lt = lt +1
             lt_salary_converted = list.lt_salary(lt).replace(/\s/g, ``)
 
