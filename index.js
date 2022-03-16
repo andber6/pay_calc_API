@@ -25,7 +25,6 @@ function get_correct_lt_based_on_additional_pay(amount, list, lt) {
     salary_outside_range = false;
     // if not the last two salary steps then continue
     if(!(amount >= parseInt(x))) {
-
         if (amount >= parseInt(lt_salary_converted)){
             // next_lt = lt +1
             lt_salary_converted = list.lt_salary(lt).replace(/\s/g, ``)
@@ -40,42 +39,41 @@ function get_correct_lt_based_on_additional_pay(amount, list, lt) {
                 lt_new = lt +1
                 get_correct_lt_based_on_additional_pay(amount, list, lt_new)
             } else {
-                
                 return lt_new;
             }
+        } else if (amount < parseInt(lt_salary_converted)) {
+                lt_new = lt -1
+                get_correct_lt_based_on_additional_pay(amount, list, lt_new)
         } else {
-            
             return lt_new;
         }
     } else {
         // salary step is already the last one
-        
-        lt_salary_converted = list.lt_salary(lt).replace(/\s/g, ``)
-    
-        if(list.lt_salary(lt) === list.getFirst().data) {
 
-            
+        lt_salary_converted = list.lt_salary(lt).replace(/\s/g, ``)
+
+        if(list.lt_salary(lt) === list.getFirst().data) {
 
             additional_pay = amount - parseInt(lt_salary_converted)
             additional_pay < 0 ? additional_pay_res = additional_pay * (-1) : additional_pay_res = additional_pay
 
-            
             return lt_new;
         }
         // salary step is the second last one
 
         // lt_next_salary_converted is the last salary step
         lt_next_salary_converted = list.lt_salary(lt+1).replace(/\s/g, ``)
-
+        
         additional_pay = amount - parseInt(lt_next_salary_converted)
         additional_pay < 0 ? additional_pay_res = additional_pay * (-1) : additional_pay_res = additional_pay
+        console.log('do we get here...? ', additional_pay);
+
         if (additional_pay + parseInt(lt_salary_converted) > parseInt(lt_next_salary_converted)) {
             lt_new = lt +1
             get_correct_lt_based_on_additional_pay(amount, list, lt_new)
         }
         return lt_new;
     }
-     
 }
 
 function formatSalaryData(totalSalary) {
