@@ -27,7 +27,6 @@ function get_correct_lt_based_on_additional_pay(amount, list, lt) {
     if(!(amount >= parseInt(x))) {
         if (amount >= parseInt(lt_salary_converted)){
             // next_lt = lt +1
-            lt_salary_converted = list.lt_salary(lt).replace(/\s/g, ``)
 
             // Calculate additional pay and store the absolute value of it as a global variable to be used in the response
             additional_pay = amount - parseInt(lt_salary_converted)
@@ -41,7 +40,7 @@ function get_correct_lt_based_on_additional_pay(amount, list, lt) {
             } else {
                 return lt_new;
             }
-        } else if (amount < parseInt(lt_salary_converted)) {
+        } else if (amount < parseInt(lt_salary_converted) && lt !== 19) {
                 lt_new = lt -1
                 get_correct_lt_based_on_additional_pay(amount, list, lt_new)
         } else {
